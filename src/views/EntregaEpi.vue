@@ -1,31 +1,45 @@
 <template>
+  <!-- Tela principal -->
   <div class="layout-container">
+
+    <!-- Título da página -->
     <header class="header-section">
       <h1>Entregas de EPI</h1>
       <p>Registro de entrega de equipamentos aos funcionários</p>
     </header>
 
+    <!-- Formulário de nova entrega -->
     <div class="card-form">
       <div class="card-header">
         <h2>Nova Entrega</h2>
       </div>
 
       <div class="main-form">
+
+        <!-- Seleção de funcionário e EPI -->
         <div class="form-row">
           <div class="form-group">
             <label>Funcionário</label>
-            <!-- O erro acontecia aqui: v-model="form.funcionario_id" -->
+
+            <!-- Guarda o ID do funcionário selecionado -->
             <select v-model="form.funcionario_id" class="custom-select">
               <option value="">Selecione o funcionário...</option>
+
+              <!-- Lista os funcionários cadastrados -->
               <option v-for="f in funcionarios" :key="f.id" :value="f.id">
                 {{ f.nome }} — {{ f.setor }}
               </option>
             </select>
           </div>
+
           <div class="form-group">
             <label>EPI</label>
+
+            <!-- Guarda o ID do EPI selecionado -->
             <select v-model="form.epi_id" class="custom-select">
               <option value="">Selecione o EPI...</option>
+
+              <!-- Lista os EPIs com saldo disponível -->
               <option v-for="e in epis" :key="e.id" :value="e.id">
                 {{ e.nome }} (Saldo: {{ estoqueMap[e.id] ?? 0 }})
               </option>
@@ -33,23 +47,33 @@
           </div>
         </div>
 
+        <!-- Dados da entrega -->
         <div class="form-row cols-3">
           <div class="form-group">
             <label>Quantidade</label>
+
+            <!-- Quantidade entregue -->
             <input type="number" v-model.number="form.quantidade_entregue" min="1" />
           </div>
+
           <div class="form-group">
             <label>Data de Entrega</label>
+
+            <!-- Data da entrega -->
             <input type="date" v-model="form.data_entrega" />
           </div>
+
           <div class="form-group checkbox-group">
             <label class="checkbox-label">
+
+              <!-- Confirma assinatura digital -->
               <input type="checkbox" v-model="form.assinatura_digital" />
               Assinatura digital confirmada
             </label>
           </div>
         </div>
 
+        <!-- Botão de registro -->
         <div class="action-bar">
           <button 
             class="btn btn-primary" 
@@ -60,20 +84,25 @@
           </button>
         </div>
 
+        <!-- Mensagens do sistema -->
         <p class="error-msg" v-if="erro">⚠ {{ erro }}</p>
         <p class="success-msg" v-if="ok">✓ Entrega registrada com sucesso!</p>
       </div>
     </div>
 
-    <!-- Tabela Histórico -->
+    <!-- Histórico de entregas -->
     <div class="card-table">
       <div class="card-header flex-between">
         <h2>Histórico de Entregas</h2>
+
+        <!-- Total de registros -->
         <span class="badge badge-blue">{{ entregas.length }} registros</span>
       </div>
 
+      <!-- Carregamento -->
       <div v-if="loading" class="text-center-loading">Carregando dados...</div>
       
+      <!-- Tabela de entregas -->
       <div v-else class="table-container">
         <table class="styled-table">
           <thead>
@@ -85,19 +114,25 @@
               <th>Status</th>
             </tr>
           </thead>
+
           <tbody>
+            <!-- Lista cada entrega -->
             <tr v-for="e in entregas" :key="e.id">
               <td>
                 <div class="text-bold">{{ e.funcionarios?.nome }}</div>
                 <div class="cargo-text">{{ e.funcionarios?.setor }}</div>
               </td>
+
               <td>
                 <div class="text-bold">{{ e.epis?.nome }}</div>
                 <div class="cargo-text">CA: {{ e.epis?.ca }}</div>
               </td>
+
               <td class="text-bold">{{ e.quantidade_entregue }}</td>
               <td class="cargo-text">{{ formatarData(e.data_entrega) }}</td>
+
               <td>
+                <!-- Status da assinatura -->
                 <span :class="e.assinatura_digital ? 'badge badge-ok' : 'badge badge-warn'">
                   {{ e.assinatura_digital ? 'Confirmada' : 'Pendente' }}
                 </span>
@@ -107,6 +142,7 @@
         </table>
       </div>
     </div>
+
   </div>
 </template>
 
