@@ -1,7 +1,7 @@
 <template>
   <div class="layout-container">
     <Menu />
-    
+
     <main class="home">
       <section class="home__hero">
         <div class="home__hero-texto">
@@ -10,11 +10,7 @@
         </div>
 
         <div class="home__hero-imagem">
-          <img
-            src="@/assets/hero.jpg"
-            alt="Ilustração de gestão de EPI"
-            class="home__hero-img"
-          />
+          <img src="@/assets/hero.jpg" alt="Ilustração de gestão de EPI" class="home__hero-img" />
         </div>
       </section>
 
@@ -244,6 +240,7 @@ export default {
 }
 
 @media (max-width: 480px) {
+
   .home__cards,
   .home__passos {
     grid-template-columns: 1fr;
