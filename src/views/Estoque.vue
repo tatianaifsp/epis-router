@@ -1,11 +1,15 @@
 <template>
-  <div class="layout-container">
-    <!-- Cabeçalho -->
+  <!-- Conteúdo principal da tela -->
+  <main class="layout-container">
+
+    <!-- Cabeçalho da página -->
     <header class="header-section flex-between">
-      <div>
+      <section>
         <h1>Controle de Estoque</h1>
         <p>Gerencie o saldo e a disponibilidade de cada EPI.</p>
-      </div>
+      </section>
+
+      <!-- Botão que recarrega os dados do estoque -->
       <button class="btn btn-outline flex-center" @click="carregar" :disabled="loading">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 8px;">
           <path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
@@ -14,57 +18,85 @@
       </button>
     </header>
 
-    <!-- Ajuste de Estoque -->
-    <div class="card-form">
-      <div class="card-header">
+    <!-- Seção do formulário de ajuste de estoque -->
+    <section class="card-form">
+
+      <!-- Cabeçalho do formulário -->
+      <header class="card-header">
         <h2>Ajustar Quantidade</h2>
-      </div>
+      </header>
       
-      <div class="main-form">
-        <div class="form-row">
-          <div class="form-group">
+      <!-- Formulário visual de atualização do estoque -->
+      <form class="main-form">
+
+        <!-- Linha com os campos EPI e quantidade -->
+        <section class="form-row">
+
+          <!-- Campo para escolher o EPI -->
+          <article class="form-group">
             <label>EPI</label>
+
+            <!-- Guarda o ID do item de estoque selecionado -->
             <select v-model="form.epi_id" class="custom-select">
               <option value="">Selecione um EPI...</option>
+
+              <!-- Lista os itens cadastrados no estoque -->
               <option v-for="item in estoque" :key="item.id" :value="item.id">
                 {{ item.epis?.nome }} (Atual: {{ item.quantidade }})
               </option>
             </select>
-          </div>
-          <div class="form-group">
-            <label>Nova Quantidade em Estoque</label>
-            <input type="number" v-model.number="form.quantidade" min="0" placeholder="0" />
-          </div>
-        </div>
+          </article>
 
-        <div class="action-bar">
+          <!-- Campo para informar a nova quantidade -->
+          <article class="form-group">
+            <label>Nova Quantidade em Estoque</label>
+
+            <!-- Atualiza form.quantidade com número -->
+            <input type="number" v-model.number="form.quantidade" min="0" placeholder="0" />
+          </article>
+        </section>
+
+        <!-- Área do botão de salvar -->
+        <footer class="action-bar">
           <button 
+            type="button"
             class="btn btn-primary" 
             @click="atualizar" 
             :disabled="!form.epi_id || loading"
           >
             Salvar Alteração
           </button>
-        </div>
+        </footer>
 
+        <!-- Mensagens exibidas para o usuário -->
         <p class="error-msg" v-if="erro">⚠ {{ erro }}</p>
         <p class="success-msg" v-if="ok">✓ Estoque atualizado com sucesso!</p>
-      </div>
-    </div>
+      </form>
+    </section>
 
-    <!-- Tabela de Saldo -->
-    <div class="card-table">
-      <div class="card-header flex-between">
+    <!-- Seção da tabela de estoque -->
+    <section class="card-table">
+
+      <!-- Cabeçalho da tabela -->
+      <header class="card-header flex-between">
         <h2>Itens em Estoque</h2>
-        <span class="badge badge-blue">{{ estoque.length }} itens catalogados</span>
-      </div>
 
-      <div v-if="loading" class="text-center" style="padding: 40px;">
+        <!-- Total de itens cadastrados -->
+        <span class="badge badge-blue">{{ estoque.length }} itens catalogados</span>
+      </header>
+
+      <!-- Estado de carregamento -->
+      <section v-if="loading" class="text-center" style="padding: 40px;">
         <div class="spinner"></div> Carregando estoque...
-      </div>
+      </section>
       
-      <div v-else class="table-container">
+      <!-- Área da tabela -->
+      <section v-else class="table-container">
+
+        <!-- Tabela com os itens do estoque -->
         <table class="styled-table">
+
+          <!-- Cabeçalho das colunas -->
           <thead>
             <tr>
               <th>EPI / CA</th>
@@ -73,24 +105,35 @@
               <th class="text-center">Situação</th>
             </tr>
           </thead>
+
+          <!-- Corpo da tabela -->
           <tbody>
+
+            <!-- Lista cada item do estoque -->
             <tr v-for="item in estoque" :key="item.id">
               <td>
-                <div class="text-bold">{{ item.epis?.nome }}</div>
-                <div class="cargo-text">CA: {{ item.epis?.ca }}</div>
+                <strong class="text-bold">{{ item.epis?.nome }}</strong>
+                <p class="cargo-text">CA: {{ item.epis?.ca }}</p>
               </td>
+
               <td class="cargo-text">{{ item.epis?.descricao || '—' }}</td>
+
               <td>
                 <span class="text-bold" style="font-family: monospace; font-size: 1.1rem;">
                   {{ item.quantidade }}
                 </span>
               </td>
+
               <td class="text-center">
+
+                <!-- Mostra a situação conforme a quantidade -->
                 <span :class="badgeClass(item.quantidade)">
                   {{ item.quantidade === 0 ? 'Sem estoque' : item.quantidade < 10 ? 'Estoque Baixo' : 'Estoque OK' }}
                 </span>
               </td>
             </tr>
+
+            <!-- Mensagem quando não há itens -->
             <tr v-if="estoque.length === 0">
               <td colspan="4" class="text-center cargo-text" style="padding: 40px;">
                 Nenhum item encontrado no estoque.
@@ -98,9 +141,9 @@
             </tr>
           </tbody>
         </table>
-      </div>
-    </div>
-  </div>
+      </section>
+    </section>
+  </main>
 </template>
 
 <script setup>
