@@ -1,80 +1,81 @@
 <template>
-  <!-- Tela principal -->
-  <div class="layout-container">
+  <!-- Conteúdo principal da página -->
+  <main class="layout-container">
 
-    <!-- Título da página -->
+    <!-- Cabeçalho da tela -->
     <header class="header-section">
       <h1>Entregas de EPI</h1>
       <p>Registro de entrega de equipamentos aos funcionários</p>
     </header>
 
-    <!-- Formulário de nova entrega -->
-    <div class="card-form">
-      <div class="card-header">
+    <!-- Seção do formulário -->
+    <section class="card-form">
+      <header class="card-header">
         <h2>Nova Entrega</h2>
-      </div>
+      </header>
 
-      <div class="main-form">
+      <!-- Formulário de entrega -->
+      <form class="main-form">
 
         <!-- Seleção de funcionário e EPI -->
-        <div class="form-row">
-          <div class="form-group">
+        <section class="form-row">
+          <article class="form-group">
             <label>Funcionário</label>
 
-            <!-- Guarda o ID do funcionário selecionado -->
+            <!-- Guarda o ID do funcionário -->
             <select v-model="form.funcionario_id" class="custom-select">
               <option value="">Selecione o funcionário...</option>
 
-              <!-- Lista os funcionários cadastrados -->
+              <!-- Lista funcionários -->
               <option v-for="f in funcionarios" :key="f.id" :value="f.id">
                 {{ f.nome }} — {{ f.setor }}
               </option>
             </select>
-          </div>
+          </article>
 
-          <div class="form-group">
+          <article class="form-group">
             <label>EPI</label>
 
-            <!-- Guarda o ID do EPI selecionado -->
+            <!-- Guarda o ID do EPI -->
             <select v-model="form.epi_id" class="custom-select">
               <option value="">Selecione o EPI...</option>
 
-              <!-- Lista os EPIs com saldo disponível -->
+              <!-- Lista EPIs -->
               <option v-for="e in epis" :key="e.id" :value="e.id">
                 {{ e.nome }} (Saldo: {{ estoqueMap[e.id] ?? 0 }})
               </option>
             </select>
-          </div>
-        </div>
+          </article>
+        </section>
 
         <!-- Dados da entrega -->
-        <div class="form-row cols-3">
-          <div class="form-group">
+        <section class="form-row cols-3">
+          <article class="form-group">
             <label>Quantidade</label>
 
             <!-- Quantidade entregue -->
             <input type="number" v-model.number="form.quantidade_entregue" min="1" />
-          </div>
+          </article>
 
-          <div class="form-group">
+          <article class="form-group">
             <label>Data de Entrega</label>
 
             <!-- Data da entrega -->
             <input type="date" v-model="form.data_entrega" />
-          </div>
+          </article>
 
-          <div class="form-group checkbox-group">
+          <article class="form-group checkbox-group">
             <label class="checkbox-label">
 
-              <!-- Confirma assinatura digital -->
+              <!-- Assinatura digital -->
               <input type="checkbox" v-model="form.assinatura_digital" />
               Assinatura digital confirmada
             </label>
-          </div>
-        </div>
+          </article>
+        </section>
 
-        <!-- Botão de registro -->
-        <div class="action-bar">
+        <!-- Ação do formulário -->
+        <footer class="action-bar">
           <button 
             class="btn btn-primary" 
             @click="registrar" 
@@ -82,28 +83,28 @@
           >
             Registrar Entrega
           </button>
-        </div>
+        </footer>
 
-        <!-- Mensagens do sistema -->
+        <!-- Mensagens -->
         <p class="error-msg" v-if="erro">⚠ {{ erro }}</p>
         <p class="success-msg" v-if="ok">✓ Entrega registrada com sucesso!</p>
-      </div>
-    </div>
+      </form>
+    </section>
 
-    <!-- Histórico de entregas -->
-    <div class="card-table">
-      <div class="card-header flex-between">
+    <!-- Seção do histórico -->
+    <section class="card-table">
+      <header class="card-header flex-between">
         <h2>Histórico de Entregas</h2>
 
-        <!-- Total de registros -->
+        <!-- Total de entregas -->
         <span class="badge badge-blue">{{ entregas.length }} registros</span>
-      </div>
+      </header>
 
       <!-- Carregamento -->
-      <div v-if="loading" class="text-center-loading">Carregando dados...</div>
+      <p v-if="loading" class="text-center-loading">Carregando dados...</p>
       
       <!-- Tabela de entregas -->
-      <div v-else class="table-container">
+      <section v-else class="table-container">
         <table class="styled-table">
           <thead>
             <tr>
@@ -119,13 +120,13 @@
             <!-- Lista cada entrega -->
             <tr v-for="e in entregas" :key="e.id">
               <td>
-                <div class="text-bold">{{ e.funcionarios?.nome }}</div>
-                <div class="cargo-text">{{ e.funcionarios?.setor }}</div>
+                <strong class="text-bold">{{ e.funcionarios?.nome }}</strong>
+                <p class="cargo-text">{{ e.funcionarios?.setor }}</p>
               </td>
 
               <td>
-                <div class="text-bold">{{ e.epis?.nome }}</div>
-                <div class="cargo-text">CA: {{ e.epis?.ca }}</div>
+                <strong class="text-bold">{{ e.epis?.nome }}</strong>
+                <p class="cargo-text">CA: {{ e.epis?.ca }}</p>
               </td>
 
               <td class="text-bold">{{ e.quantidade_entregue }}</td>
@@ -140,10 +141,10 @@
             </tr>
           </tbody>
         </table>
-      </div>
-    </div>
+      </section>
+    </section>
 
-  </div>
+  </main>
 </template>
 
 <script setup>
