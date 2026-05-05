@@ -1,334 +1,230 @@
 <template>
-  <!-- Container principal que divide a tela em Sidebar + Conteúdo -->
   <div class="shell">
-    <!-- ===== SIDEBAR: Menu lateral fixo ===== -->
-    <!-- A Sidebar fica fixa na esquerda enquanto o conteúdo rola -->
+    <!-- BARRA LATERAL (SIDEBAR) -->
     <aside class="sidebar">
-      <!-- Logo/Título do sistema -->
-      <h1 class="logo">
-        <i class="fas fa-shield-alt"></i>
-        Sistema EPI
-      </h1>
+      <div class="sidebar-header">
+        <div class="logo-icon">
+          <i class="fas fa-shield-halved"></i>
+        </div>
+        <div class="brand-info">
+          <span class="brand-name">Sistema EPI</span>
+          <span class="brand-status">Gestão de Segurança</span>
+        </div>
+      </div>
 
-      <!-- Menu de navegação -->
-      <!-- RouterLink: links especiais do Vue Router que navegam sem recarregar a página -->
       <nav class="menu">
-        <!-- Link para Dashboard -->
-        <!-- to="/dashboard" = navega para a rota /dashboard -->
-        <!-- active-class="active" = adiciona a classe "active" quando a rota atual é /dashboard -->
-        <RouterLink to="/dashboard" class="menu-item" active-class="active">
-          <i class="fas fa-home"></i>
-          <span>Dashboard</span>
-        </RouterLink>
-
-        <!-- Link para Funcionários -->
-        <RouterLink to="/funcionarios" class="menu-item" active-class="active">
-          <i class="fas fa-users"></i>
+        <small class="menu-label">Operacional</small>
+        <RouterLink to="/AppLayout/Funcionarios" class="menu-item" active-class="active">
+          <i class="fas fa-users-viewfinder"></i>
           <span>Funcionários</span>
         </RouterLink>
-
-        <!-- Link para Entregas de EPI -->
-        <RouterLink to="/entregas" class="menu-item" active-class="active">
-          <i class="fas fa-box"></i>
-          <span>Entregas de EPI</span>
+        <RouterLink to="/AppLayout/Epi" class="menu-item" active-class="active">
+          <i class="fas fa-helmet-safety"></i>
+          <span>Equipamentos</span>
         </RouterLink>
-
-        <!-- Link para Relatório -->
-        <RouterLink to="/relatorio" class="menu-item" active-class="active">
-          <i class="fas fa-chart-bar"></i>
-          <span>Relatório</span>
+        <RouterLink to="/AppLayout/EntregaEpi" class="menu-item" active-class="active">
+          <i class="fas fa-truck-ramp-box"></i>
+          <span>Entregas</span>
+        </RouterLink>
+        
+        <small class="menu-label">Administrativo</small>
+        <RouterLink to="/AppLayout/Estoque" class="menu-item" active-class="active">
+          <i class="fas fa-boxes-stacked"></i>
+          <span>Estoque</span>
+        </RouterLink>
+        <RouterLink to="/AppLayout/MovimentacaoEpis" class="menu-item" active-class="active">
+          <i class="fas fa-chart-pie"></i>
+          <span>Relatórios</span>
         </RouterLink>
       </nav>
 
-      <!-- Botão de logout -->
-      <!-- @click="sair" = quando o usuário clica, chama a função sair() -->
-      <button @click="sair" class="botao-sair">
-        <i class="fas fa-sign-out-alt"></i>
-        <span>Sair</span>
-      </button>
+      <!-- RODAPÉ DA SIDEBAR COM BOTÃO SAIR -->
+      <div class="sidebar-footer">
+        <button @click="sair" class="botao-sair">
+          <i class="fas fa-right-from-bracket"></i>
+          <span>Sair do Sistema</span>
+        </button>
+      </div>
     </aside>
 
-    <!-- ===== CONTEÚDO CENTRAL ===== -->
-    <!-- Aqui é onde as páginas aparecem (Dashboard, Funcionários, etc.) -->
+    <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
     <main class="conteudo">
-      <!-- RouterView: espaço vazio onde o Vue coloca o componente da rota atual -->
-      <!-- Cada rota filha (children) aparece aqui automaticamente -->
       <RouterView />
     </main>
   </div>
 </template>
 
 <script setup>
-// ===== IMPORTAÇÕES =====
-// Importar o composable do Supabase que já está configurado no projeto
-// useSupabase() = retorna o cliente Supabase pronto para usar
+import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
 
-// Importar o router do Vue Router para navegar entre páginas
-// useRouter() = permite usar router.push() para ir para outras páginas
-import { useRouter } from 'vue-router'
-
-// Importar os componentes especiais do Vue Router
-// RouterLink = componente que cria links que navegam sem recarregar
-// RouterView = componente que mostra o conteúdo da rota atual
-import { RouterLink, RouterView } from 'vue-router'
-
-// ===== CONFIGURAÇÃO =====
-// Pegar o cliente Supabase já configurado
-// supabase = objeto que tem os métodos para autenticação, banco de dados, etc
+// Inicializa as ferramentas necessárias
 const { supabase } = useSupabase()
-
-// Pegar o router para navegar entre páginas
-// router = objeto que permite router.push('/pagina') para navegar
 const router = useRouter()
 
-// ===== FUNÇÃO: FAZER LOGOUT =====
-// Esta função é chamada quando o usuário clica no botão "Sair"
-// Ela desconecta o usuário do Supabase e o redireciona para a página de login
+/**
+ * Função para encerrar a sessão
+ */
 async function sair() {
-  // try = tenta executar o código dentro
-  // Se houver um erro, vai para o catch
   try {
-    // ===== PASSO 1: DESCONECTAR DO SUPABASE =====
-    // supabase.auth.signOut() = função do Supabase que desconecta o usuário
-    // Isso remove a sessão do usuário do navegador
-    // await = espera a operação terminar antes de continuar
-    await supabase.auth.signOut()
-    // Depois de desconectar, o usuário não está mais autenticado
-    // Se tentar acessar uma página protegida, será redirecionado para login
-
-    // ===== PASSO 2: REDIRECIONAR PARA A PÁGINA DE LOGIN =====
-    // router.push('/login') = navega para a página /login
-    // Isso leva o usuário de volta para a tela de login
-    // A navegação acontece sem recarregar a página (SPA)
-    router.push('/login')
-    // Agora o usuário está na página de login e pode fazer login novamente
-  }
-  // catch = captura qualquer erro que aconteça no try
-  catch (err) {
-    // Se houver um erro ao fazer logout, mostrar no console
-    // Isso ajuda o desenvolvedor a entender o que deu errado
-    console.error('Erro ao fazer logout:', err)
-    // Nota: mesmo com erro, o usuário pode estar desconectado
-    // Mas é bom avisar o desenvolvedor sobre o problema
+    // 1. Encerra a sessão no Supabase
+    const { error } = await supabase.auth.signOut()
+    if (error) throw error
+    
+    // 2. Redireciona para a tela de login
+    // Certifique-se que a rota no seu router se chama '/login' ou '/'
+    router.push('/') 
+  } catch (err) {
+    console.error('Erro ao sair:', err.message)
+    alert('Erro ao sair do sistema. Tente novamente.')
   }
 }
 </script>
 
 <style scoped>
-/* ===== ESTILOS GERAIS ===== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* ===== CONTAINER PRINCIPAL: SHELL ===== */
-/* Divide a tela em duas colunas: Sidebar (esquerda) + Conteúdo (direita) */
+/* ===== ESTRUTURA PRINCIPAL ===== */
 .shell {
   display: flex;
-  /* flex = coloca os elementos lado a lado */
   height: 100vh;
-  /* 100vh = ocupa toda a altura da tela */
-  background-color: #FFFFFF;
+  width: 100vw;
+  background-color: #f8fafc;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
 }
 
-/* ===== SIDEBAR: Menu lateral fixo ===== */
-/* A Sidebar fica presa no lugar enquanto o conteúdo rola */
+/* ===== SIDEBAR ===== */
 .sidebar {
-  width: 250px;
-  /* Largura fixa de 250px */
-  background-color: #003D99;
-  /* Azul escuro como fundo */
-  color: #FFFFFF;
-  /* Texto branco */
-  padding: 30px 20px;
-  /* Espaço interno */
+  width: 260px;
+  background-color: #0f172a; /* Slate 900 */
+  color: #f8fafc;
   display: flex;
-  /* Coloca os itens em coluna */
   flex-direction: column;
   position: fixed;
-  /* Fica fixo enquanto o conteúdo rola */
   height: 100vh;
-  /* Ocupa toda a altura da tela */
   left: 0;
-  /* Posição na esquerda */
   top: 0;
-  /* Posição no topo */
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-  /* Sombra suave na direita da Sidebar */
   z-index: 1000;
-  /* Fica acima de outros elementos */
-  overflow-y: auto;
-  /* Permite rolar se o conteúdo for muito grande */
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* ===== LOGO ===== */
-/* Título do sistema na Sidebar */
-.logo {
-  font-size: 24px;
-  font-weight: 700;
-  color: #FFFFFF;
-  margin-bottom: 40px;
-  text-align: center;
+.sidebar-header {
+  padding: 24px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  background: #38bdf8;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  color: #0f172a;
+  font-size: 20px;
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
 }
 
-/* Ícone do logo */
-.logo i {
-  font-size: 28px;
-}
+.brand-info { display: flex; flex-direction: column; }
+.brand-name { font-size: 16px; font-weight: 700; color: #ffffff; letter-spacing: -0.02em; }
+.brand-status { font-size: 10px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
 
 /* ===== MENU DE NAVEGAÇÃO ===== */
-/* Container que envolve todos os links do menu */
-.menu {
-  flex-grow: 1;
-  /* Ocupa todo o espaço disponível */
-  display: flex;
-  flex-direction: column;
-  /* Coloca os itens em coluna (um embaixo do outro) */
-  gap: 10px;
-  /* Espaço entre os itens */
+.menu { flex-grow: 1; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+
+.menu-label { 
+  color: #475569; 
+  font-size: 11px; 
+  font-weight: 700; 
+  text-transform: uppercase; 
+  margin: 20px 0 8px 12px; 
+  letter-spacing: 0.1em;
 }
 
-/* ===== ITENS DO MENU ===== */
-/* Estilo de cada link do menu */
 .menu-item {
   display: flex;
-  /* Coloca o ícone e o texto lado a lado */
   align-items: center;
-  padding: 15px 20px;
-  color: #FFFFFF;
-  text-decoration: none;
-  /* Remove o sublinhado padrão dos links */
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  /* Muda o cursor para "mão" quando passa */
-  transition: all 0.3s ease;
-  /* Animação suave ao mudar de estado */
   gap: 12px;
-  /* Espaço entre o ícone e o texto */
+  padding: 12px;
+  color: #94a3b8;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
-/* Quando passa o mouse no item do menu */
-.menu-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  /* Fundo branco translúcido */
+.menu-item i { width: 20px; font-size: 18px; text-align: center; }
+
+.menu-item:hover { 
+  background: rgba(255, 255, 255, 0.05); 
+  color: #ffffff; 
 }
 
-/* Quando o item está ativo (a página atual) */
+/* ESTADO ATIVO (IGUAL AO HOVER DO SAIR) */
 .menu-item.active {
-  background-color: rgba(255, 255, 255, 0.2);
-  /* Fundo branco mais opaco */
+  background: #38bdf8; 
+  color: #0f172a;
   font-weight: 600;
-  /* Texto em negrito */
-  border-left: 4px solid #FFFFFF;
-  /* Borda branca na esquerda */
-  padding-left: 16px;
-  /* Reduz o padding para compensar a borda */
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
 }
 
-/* Ícone do menu */
-.menu-item i {
-  font-size: 20px;
-  width: 24px;
-  text-align: center;
+/* ===== RODAPÉ E BOTÃO SAIR ===== */
+.sidebar-footer { 
+  padding: 20px; 
+  border-top: 1px solid rgba(255, 255, 255, 0.05); 
 }
 
-/* ===== BOTÃO SAIR ===== */
-/* Botão de logout na parte inferior da Sidebar */
 .botao-sair {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background-color: rgba(255, 255, 255, 0.1);
-  /* Fundo branco translúcido */
-  color: #FFFFFF;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 4px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
-  transition: all 0.3s ease;
-  width: 100%;
-  /* Ocupa toda a largura da Sidebar */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Quando passa o mouse no botão Sair */
-.botao-sair:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  /* Fundo mais opaco */
+/* HOVER AZUL IGUAL A NAVEGAÇÃO */
+.botao-sair:hover { 
+  background: #38bdf8; 
+  color: #0f172a;
+  border-color: #38bdf8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
 }
 
-/* Quando clica no botão Sair */
 .botao-sair:active {
-  transform: scale(0.98);
-  /* Diminui um pouco o tamanho */
+  transform: translateY(0);
 }
 
-/* Ícone do botão Sair */
-.botao-sair i {
-  font-size: 18px;
-}
-
-/* ===== CONTEÚDO CENTRAL ===== */
-/* Área principal onde as páginas aparecem */
+/* ===== CONTEÚDO ===== */
 .conteudo {
   flex-grow: 1;
-  /* Ocupa todo o espaço restante */
-  margin-left: 250px;
-  /* Deixa espaço para a Sidebar fixa (250px) */
-  padding: 30px;
-  /* Espaço interno */
+  margin-left: 260px;
+  background-color: #ffffff;
+  height: 100vh;
   overflow-y: auto;
-  /* Permite rolar o conteúdo se necessário */
-  background-color: #FFFFFF;
+  padding: 0;
 }
 
-/* ===== RESPONSIVIDADE: Telas pequenas (celulares) ===== */
-@media (max-width: 768px) {
-  /* Em telas pequenas, a Sidebar fica escondida ou reduzida */
-  .sidebar {
-    width: 200px;
-    /* Reduz a largura da Sidebar */
-  }
-
-  .conteudo {
-    margin-left: 200px;
-    /* Ajusta o espaço para a nova largura */
-    padding: 20px;
-    /* Reduz o padding */
-  }
-
-  .logo {
-    font-size: 20px;
-    margin-bottom: 30px;
-  }
-
-  .menu-item {
-    padding: 12px 15px;
-    font-size: 14px;
-  }
+/* Scrollbar personalizada para a sidebar */
+.sidebar::-webkit-scrollbar {
+  width: 4px;
 }
-
-/* ===== RESPONSIVIDADE: Telas muito pequenas (celulares pequenos) ===== */
-@media (max-width: 480px) {
-  /* Em telas muito pequenas, a Sidebar pode ser ocultada com JavaScript */
-  .sidebar {
-    width: 100%;
-    position: absolute;
-    height: auto;
-  }
-
-  .conteudo {
-    margin-left: 0;
-    padding: 15px;
-  }
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
 }
 </style>

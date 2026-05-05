@@ -1,79 +1,116 @@
+/* 1. IMPORTAÇÃO DA FONTE PROFISSIONAL */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  /* PALETA DE CORES CENTRALIZADA */
+  --primary: #0052FF;       /* Azul Royal */
+  --primary-dark: #0037B3;  /* Azul para Hover */
+  --secondary: #001A41;     /* Azul Marinho (Textos e Hero) */
+  --bg-site: #F8FAFC;       /* Cinza quase branco para o fundo */
+  --white: #FFFFFF;
+  
+  /* CORES DE TEXTO */
+  --text-main: #1A202C;
+  --text-muted: #64748B;
+  
+  /* BORDAS E SOMBRAS */
+  --border-color: #E2E8F0;
+  --shadow-sm: 0 2px 4px rgba(0, 26, 65, 0.05);
+  --shadow-md: 0 10px 15px -3px rgba(0, 26, 65, 0.1);
+  
+  /* TIPOGRAFIA */
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  line-height: 1.6;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
+  color: var(--text-main);
+  background-color: var(--bg-site);
+  
+  /* AJUSTES DE RENDERIZAÇÃO */
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #efff64;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
+/* 2. RESET E ESTRUTURA BASE */
 body {
   margin: 0;
   display: flex;
-  place-items: center;
-  min-width: 320px;
+  flex-direction: column;
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+#app {
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* 3. TIPOGRAFIA GLOBAL */
+h1, h2, h3, h4 {
+  color: var(--secondary);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-top: 0;
+}
+
+h1 { font-size: 2.5rem; line-height: 1.1; }
+p { color: var(--text-muted); }
+
+/* 4. LINKS E BOTÕES GLOBAIS */
+a {
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--primary-dark);
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.6rem;
+  font-size: 0.95rem;
+  font-weight: 700;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: 12px;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 82, 255, 0.2);
 }
+
 button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(0, 82, 255, 0.25);
 }
 
-.card {
-  padding: 2em;
+button:active {
+  transform: translateY(0);
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
+/* 5. CLASSES DE UTILIDADE (PADRONIZAÇÃO DE CARDS) */
+.global-card {
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
   padding: 2rem;
-  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.global-card:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+/* 6. RESPONSIVIDADE BASE */
+@media (max-width: 768px) {
+  h1 { font-size: 2rem; }
+  :root { font-size: 15px; }
 }

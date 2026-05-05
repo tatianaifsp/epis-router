@@ -186,7 +186,7 @@ async function fazerLogin() {
     // router.push('/') = navega para a página inicial
     // '/' = rota raiz (onde está o AppLayout com a Sidebar)
     // Isso acontece sem recarregar a página (SPA - Single Page Application)
-    router.push('/')
+       router.push('/AppLayout')
     // Depois que router.push() é executado, o usuário é levado para a página inicial
   }
   // ===== PASSO 7: CAPTURAR ERROS INESPERADOS =====
@@ -207,173 +207,173 @@ async function fazerLogin() {
 </script>
 
 <style scoped>
-/* ===== ESTILOS GERAIS ===== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
+/* Importação da fonte Inter - Padrão para sistemas profissionais */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 /* ===== CONTAINER PRINCIPAL ===== */
-/* Centraliza o formulário na tela */
 .container-login {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #FFFFFF;
-  padding: 20px;
+  /* Gradiente sutil em vez de branco chapado */
+  background: radial-gradient(circle at top left, #f8fafc, #f1f5f9);
+  padding: 24px;
+  font-family: 'Inter', sans-serif;
 }
 
-/* ===== CAIXA DO FORMULÁRIO ===== */
-/* Estilo da caixa que envolve o formulário */
+/* ===== CAIXA DO FORMULÁRIO (CARD) ===== */
 .form-box {
   width: 100%;
-  max-width: 450px;
-  padding: 50px 40px;
-  border: 1px solid #E2E8F0;
-  border-radius: 8px;
-  background-color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  max-width: 420px;
+  padding: 48px;
+  border-radius: 16px; /* Bordas mais arredondadas são mais modernas */
+  background-color: #ffffff;
+  /* Sombra multicamada para parecer "real" */
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 /* ===== TÍTULOS ===== */
-/* Título principal */
 .titulo {
-  font-size: 32px;
-  color: #003D99;
+  font-size: 28px;
+  /* Slate 900: um tom de cinza quase preto, mais elegante que azul puro */
+  color: #0f172a; 
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   text-align: center;
+  letter-spacing: -0.025em;
 }
 
-/* Subtítulo */
 .subtitulo {
-  font-size: 16px;
-  color: #1A1A1A;
+  font-size: 15px;
+  color: #64748b; /* Slate 500 */
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 }
 
 /* ===== FORMULÁRIO ===== */
-/* Estilos do formulário */
 .formulario {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
-/* ===== GRUPOS DE FORMULÁRIO ===== */
-/* Cada campo (e-mail, senha) é envolvido em um form-group */
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
-/* ===== LABELS ===== */
-/* Rótulos dos campos (E-mail, Senha) */
 .label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  color: #003D99;
+  color: #334155; /* Slate 700 */
+  margin-left: 2px;
 }
 
 /* ===== INPUTS ===== */
-/* Estilo dos campos de entrada (e-mail, senha) */
 .input {
-  padding: 12px 16px;
-  border: 1px solid #E2E8F0;
-  border-radius: 4px;
-  font-size: 16px;
-  color: #1A1A1A;
-  background-color: #FFFFFF;
-  transition: all 0.3s ease;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #1e293b;
+  background-color: #f8fafc;
+  transition: all 0.2s ease-in-out;
 }
 
-/* Quando o usuário clica no input, muda a borda para azul */
+.input::placeholder {
+  color: #94a3b8;
+}
+
 .input:focus {
   outline: none;
-  border-color: #003D99;
-  box-shadow: 0 0 0 3px rgba(0, 61, 153, 0.1);
+  border-color: #2563eb; /* Azul Royal */
+  background-color: #ffffff;
+  /* Anel de foco suave */
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
 }
 
 /* ===== MENSAGEM DE ERRO ===== */
-/* Estilo da mensagem de erro */
 .mensagem-erro {
-  padding: 12px 16px;
-  background-color: #FEE2E2;
-  border: 1px solid #FECACA;
-  border-radius: 4px;
-  color: #DC2626;
-  font-size: 14px;
+  padding: 12px;
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  border-radius: 8px;
+  color: #b91c1c;
+  font-size: 13px;
+  font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-
-/* Ícone de erro */
-.mensagem-erro i {
-  font-size: 18px;
+  gap: 10px;
+  /* Animação de "shake" ao aparecer */
+  animation: shake 0.4s ease-in-out;
 }
 
 /* ===== BOTÃO DE ENTRAR ===== */
-/* Estilo do botão de login */
 .botao-entrar {
-  padding: 12px 24px;
-  background-color: #003D99;
-  color: #FFFFFF;
+  margin-top: 8px;
+  padding: 12px;
+  background-color: #2563eb;
+  color: #ffffff;
   border: none;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: 10px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  min-height: 44px;
+  gap: 10px;
 }
 
-/* Quando passa o mouse no botão, muda a cor */
 .botao-entrar:hover:not(:disabled) {
-  background-color: #002D73;
+  background-color: #1d4ed8;
+  transform: translateY(-1px); /* Leve elevação ao passar o mouse */
+  box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2);
 }
 
-/* Quando o botão está desabilitado (carregando), muda a aparência */
+.botao-entrar:active:not(:disabled) {
+  transform: translateY(0);
+}
+
 .botao-entrar:disabled {
-  opacity: 0.6;
+  background-color: #94a3b8;
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
 /* ===== DICA ===== */
-/* Estilo da dica para o usuário */
 .dica {
-  font-size: 13px;
-  color: #6B7280;
+  font-size: 12px;
+  color: #94a3b8;
   text-align: center;
-  margin-top: 20px;
-  line-height: 1.5;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #f1f5f9;
+}
+
+/* Animação de erro */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
 }
 
 /* ===== RESPONSIVIDADE ===== */
-/* Em telas pequenas (celulares), reduz o tamanho do formulário */
-@media (max-width: 600px) {
+@media (max-width: 480px) {
   .form-box {
-    padding: 30px 20px;
+    padding: 32px 24px;
+    box-shadow: none; /* Em telas muito pequenas, o design flat funciona melhor */
+    border: none;
+    background: transparent;
   }
-
-  .titulo {
-    font-size: 24px;
-  }
-
-  .subtitulo {
-    font-size: 14px;
+  .container-login {
+    background: #ffffff;
   }
 }
 </style>
